@@ -3,6 +3,8 @@ var router = express.Router();
 
 // requiring models
 var Service = require("../models/service");
+var Product = require("../models/product");
+const service = require('../models/service');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -30,5 +32,27 @@ router.get('/service/:id', function(req, res, next){
   })
   .catch((err) => next(err))
 });
+
+// products routes
+// view all products in one service
+router.get('/:serviceID/products', function(req, res, next){
+  Product.find({service_id: req.params.serviceID})
+  .then((products) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(products);
+  })
+  .catch((err) => next(err))
+})
+//find one product
+router.get('/products/:productID', function(req, res, next){
+  Product.findById(req.params.productID)
+  .then((product) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(product);
+  })
+  .catch((err) => next(err))
+})
 
 module.exports = router;
