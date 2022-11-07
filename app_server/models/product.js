@@ -11,9 +11,10 @@ var ProductSchema = new Schema({
     type: String,
     required: true,
   },
-  service_id: {
+  service: {
     type: mongoose.Types.ObjectId,
     required: true,
+    ref: 'Service',
   },
 });
 

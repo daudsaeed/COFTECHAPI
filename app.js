@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
 var adminRouter = require('./app_server/routes/admin');
+var customerRouter = require("./app_server/routes/customer");
 
 const connection = mongoose.connect(
   'mongodb://localhost:27017/coft_tech', 
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
+app.use("/customer", customerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

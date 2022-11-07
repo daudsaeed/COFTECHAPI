@@ -36,7 +36,7 @@ router.get('/service/:id', function(req, res, next){
 // products routes
 // view all products in one service
 router.get('/:serviceID/products', function(req, res, next){
-  Product.find({service_id: req.params.serviceID})
+  Product.find({service: req.params.serviceID})
   .then((products) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
@@ -46,13 +46,22 @@ router.get('/:serviceID/products', function(req, res, next){
 })
 //find one product
 router.get('/products/:productID', function(req, res, next){
-  Product.findById(req.params.productID)
-  .then((product) => {
+  Product.findOne({_id: req.params.productID}).populate('service')
+  .exec(function(err, product){
+    if (err){
+      return next(err)
+    }
+    console.log(product.service.name);
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(product);
   })
-  .catch((err) => next(err))
+  // .then((product) => {
+  //   res.statusCode = 200;
+  //   res.setHeader('Content-Type', 'application/json');
+  //   res.json(product);
+  // })
+  // .catch((err) => next(err))
 })
 
 module.exports = router;
