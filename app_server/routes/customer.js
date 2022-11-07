@@ -67,6 +67,7 @@ router.get("/subscriptions/:id", function (req, res, next) {
   Subscription.findOne({ cid: req.params.id })
     .populate("cid")
     .populate("pid")
+    .populate("packageid")
     .exec(function (err, subscription) {
       if (err) {
         return next(err);

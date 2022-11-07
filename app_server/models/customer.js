@@ -5,6 +5,10 @@ var customerSchema = new Schema({
     type: String,
     required: true,
   },
+  user_id: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+  }
 });
 
 module.exports = mongoose.model("Customer", customerSchema);

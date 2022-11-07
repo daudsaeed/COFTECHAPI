@@ -5,11 +5,49 @@ var router = express.Router();
 var Service = require("../models/service");
 var Product = require("../models/product");
 var Package = require("../models/package");
+var User = require("../models/user");
+var Customer = require("../models/customer");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Admin Page" });
 });
+
+
+// adding a user / customer 
+router.post("/customer", function (req, res, next) {
+  User.create({
+    user_type: req.body.user_type,
+  })
+    .then(
+      (user) => {
+        console.log("User created", user);
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(user);
+        return user._id;
+      },
+      (err) => next(err)
+    )
+    .then((uid) => {
+      Customer.create({
+        name: req.body.name,
+        user_id: uid,
+      });
+    });
+});
+
+//adding an admin user
+// router.post("/user", function (req, res, next) {
+//   User.create(req.body)
+//   .then((user) => {
+//     console.log("User added", user);
+//     res.statusCode = 200;
+//     res.setHeader("Content-Type", "application/json");
+//     res.json(user);
+//   }, (err) => {next(err)})
+//   .catch((err) => next(err))
+// });
 
 // services
 // add a service
@@ -83,24 +121,8 @@ router.put("/product/:id", function(req, res, next){
 });
 
 // mahnoor part => packages
-router.get("/packages", function (req, res, next) {
-  Package.find().exec(function (error, results) {
-    if (error) {
-      return next(error);
-    }
-    res.json(results);
-  });
-});
-router.get("/package/:id", function (req, res, next) {
-  Package.findById(req.params.id)
-    .then((package) => {
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "application/json");
-      res.json(package);
-    })
-    .catch((err) => next(err));
-});
-router.post("/addpackage", function (req, res, next) {
+// add package
+router.post("/package", function (req, res, next) {
   Package.create(req.body)
     .then(
       (package) => {
@@ -113,6 +135,7 @@ router.post("/addpackage", function (req, res, next) {
     )
     .catch((err) => next(err));
 });
+// update package
 router.put("/package/:id", function (req, res, next) {
   Package.findOneAndUpdate(
     { _id: req.params.id },
@@ -126,7 +149,8 @@ router.put("/package/:id", function (req, res, next) {
     }
   );
 });
-router.delete("/delpackage/:id", function (req, res, next) {
+// delete package
+router.delete("/package/:id", function (req, res, next) {
   Package.deleteOne({ _id: req.params.id }, function (error, results) {
     if (error) {
       return next(error);

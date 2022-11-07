@@ -4,6 +4,7 @@ var router = express.Router();
 // requiring models
 var Service = require("../models/service");
 var Product = require("../models/product");
+var Package = require("../models/package");
 const service = require('../models/service');
 
 /* GET home page. */
@@ -63,5 +64,24 @@ router.get('/products/:productID', function(req, res, next){
   // })
   // .catch((err) => next(err))
 })
+
+// mahnoor part => packages
+router.get("/packages", function (req, res, next) {
+  Package.find().exec(function (error, results) {
+    if (error) {
+      return next(error);
+    }
+    res.json(results);
+  });
+});
+router.get("/package/:id", function (req, res, next) {
+  Package.findById(req.params.id)
+    .then((package) => {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json(package);
+    })
+    .catch((err) => next(err));
+});
 
 module.exports = router;
