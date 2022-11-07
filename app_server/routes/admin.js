@@ -7,6 +7,8 @@ var Product = require("../models/product");
 var Package = require("../models/package");
 var User = require("../models/user");
 var Customer = require("../models/customer");
+var Chat = require("../models/chat");
+var Message = require("../models/message");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -158,6 +160,32 @@ router.delete("/package/:id", function (req, res, next) {
     // Respond with valid data
     res.json(results);
   });
+});
+
+// fatima anwar part
+//admin view all chats
+router.get('/chats', function(req, res, next){
+  Chat.find().sort('_id')
+  .populate("cid")
+  .exec(function(error, results) {
+    if (error) {
+        return next(error);
+    }
+    // displaying the result
+    res.json(results);
+  })
+});
+
+//admin view one chat
+router.get('/chat/:id', function(req, res, next){
+  Chat.findById(req.params.id)
+  .populate("cid")
+  .then((chat) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(chat);
+  })
+  .catch((err) => next(err))
 });
 
 module.exports = router;

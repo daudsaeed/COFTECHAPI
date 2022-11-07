@@ -4,6 +4,7 @@ var router = express.Router();
 // requiring models
 var Package = require("../models/package");
 var Subscription = require("../models/subscription");
+var Chat = require("../models/chat");
 
 router.get("/packages", function (req, res, next) {
   Package.find().exec(function (error, results) {
@@ -78,5 +79,17 @@ router.get("/subscriptions/:id", function (req, res, next) {
       res.json(subscription);
     });
 });
+
+// view chat 
+router.get('/chat/:id', function(req, res, next){
+  Chat.findById(req.params.id)
+  .then((customer) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(Customer);
+  })
+  .catch((err) => next(err))
+});
+
 
 module.exports = router;
