@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 //services routes
-// view all services
+// view all services => by dawood
 router.get('/services', function(req, res, next){
   Service.find().sort('_id').exec(function(error, results) {
     if (error) {
@@ -35,7 +35,7 @@ router.get('/service/:id', function(req, res, next){
 });
 
 // products routes
-// view all products in one service
+// view all products in one service => by fatima hanif
 router.get('/:serviceID/products', function(req, res, next){
   Product.find({service: req.params.serviceID})
   .then((products) => {

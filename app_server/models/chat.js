@@ -9,7 +9,7 @@ var ChatSchema = new Schema({
   },
   messages: {
     type: [{
-        sid: {
+        mid: {
             type: mongoose.Types.ObjectId,
             ref: 'Message'
         }

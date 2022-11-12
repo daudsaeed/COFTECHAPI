@@ -15,7 +15,7 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Admin Page" });
 });
 
-
+// utilities done by fatima hanif
 // adding a user / customer 
 router.post("/customer", function (req, res, next) {
   User.create({
@@ -51,6 +51,7 @@ router.post("/customer", function (req, res, next) {
 //   .catch((err) => next(err))
 // });
 
+// dawood part
 // services
 // add a service
 router.post("/service", function (req, res, next) {
@@ -87,6 +88,7 @@ router.put("/service/:id", function(req, res, next){
   })
 });
 
+// fatima hanif part
 // products
 // add a product
 router.post("/product", function (req, res, next) {

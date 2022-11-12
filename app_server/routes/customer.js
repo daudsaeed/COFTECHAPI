@@ -6,6 +6,8 @@ var Package = require("../models/package");
 var Subscription = require("../models/subscription");
 var Chat = require("../models/chat");
 
+// packages by mahnoor
+
 router.get("/packages", function (req, res, next) {
   Package.find().exec(function (error, results) {
     if (error) {
@@ -80,13 +82,15 @@ router.get("/subscriptions/:id", function (req, res, next) {
     });
 });
 
-// view chat 
+// view chat by fatima anwar
 router.get('/chat/:id', function(req, res, next){
   Chat.findById(req.params.id)
+  .populate('cid')
+  .populate('messages.mid')
   .then((customer) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(Customer);
+    res.json(customer);
   })
   .catch((err) => next(err))
 });
