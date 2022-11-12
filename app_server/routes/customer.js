@@ -46,6 +46,7 @@ router.post("/subscribe/custom", function (req, res, next) {
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
+    custom: true,
   })
     .then(
       (package) => {

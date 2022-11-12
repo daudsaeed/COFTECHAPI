@@ -182,6 +182,7 @@ router.get('/chats', function(req, res, next){
 router.get('/chat/:id', function(req, res, next){
   Chat.findById(req.params.id)
   .populate("cid")
+  .populate("messages.mid")
   .then((chat) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
