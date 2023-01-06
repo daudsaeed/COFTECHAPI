@@ -143,7 +143,8 @@ router.post("/package", function (req, res, next) {
 router.put("/package/:id", function (req, res, next) {
   Package.findOneAndUpdate(
     { _id: req.params.id },
-    { name: req.body.name },
+    { name: req.body.name , description:req.body.description,price:req.body.price},
+    
     function (error, results) {
       if (error) {
         return next(error);
@@ -169,6 +170,7 @@ router.delete("/package/:id", function (req, res, next) {
 router.get('/chats', function(req, res, next){
   Chat.find().sort('_id')
   .populate("cid")
+  .populate("messages.mid")
   .exec(function(error, results) {
     if (error) {
         return next(error);
