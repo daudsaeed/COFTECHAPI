@@ -16,7 +16,11 @@ router.get("/", function (req, res, next) {
 });
 
 // utilities done by fatima hanif
-// adding a user / customer 
+// adding a user / customer
+router.get("/customer", async function (req, res, next) {
+  const customer = await Customer.findOne({ user_id: req.body.user_id });
+  res.json(customer);
+});
 router.post("/customer", function (req, res, next) {
   User.create({
     user_type: req.body.user_type,
@@ -26,16 +30,15 @@ router.post("/customer", function (req, res, next) {
         console.log("User created", user);
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json(user);
-        return user._id;
       },
       (err) => next(err)
     )
-    .then((uid) => {
-      Customer.create({
+    .then(async (uid) => {
+      const customer = await Customer.create({
         name: req.body.name,
         user_id: uid,
       });
+      res.json(customer);
     });
 });
 
@@ -56,36 +59,42 @@ router.post("/customer", function (req, res, next) {
 // add a service
 router.post("/service", function (req, res, next) {
   Service.create(req.body)
-  .then((service) => {
-    console.log("Service added", service);
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.json(service);
-  }, (err) => {next(err)})
-  .catch((err) => next(err))
+    .then(
+      (service) => {
+        console.log("Service added", service);
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(service);
+      },
+      (err) => {
+        next(err);
+      }
+    )
+    .catch((err) => next(err));
 });
 // delete a service
-router.delete("/service/:id", function(req, res, next){
-  Service.deleteOne({_id: req.params.id}, function(err, result){
-    if (err){
-      return next(err)
+router.delete("/service/:id", function (req, res, next) {
+  Service.deleteOne({ _id: req.params.id }, function (err, result) {
+    if (err) {
+      return next(err);
     }
     // result
-    res.json(result)
-  })
+    res.json(result);
+  });
 });
 //update a service
-router.put("/service/:id", function(req, res, next){
+router.put("/service/:id", function (req, res, next) {
   Service.findOneAndUpdate(
-    {_id: req.params.id}, 
-    {detail: req.body.detail, name: req.body.name}, 
-    function(err, result){
-    if (err) {
-      return next(err)
+    { _id: req.params.id },
+    { detail: req.body.detail, name: req.body.name },
+    function (err, result) {
+      if (err) {
+        return next(err);
+      }
+      // result
+      res.json(result);
     }
-    // result
-    res.json(result)
-  })
+  );
 });
 
 // fatima hanif part
@@ -93,35 +102,42 @@ router.put("/service/:id", function(req, res, next){
 // add a product
 router.post("/product", function (req, res, next) {
   Product.create(req.body)
-  .then((product) => {
-    console.log("Product added", product);
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.json(product);
-  }, (err) => {next(err)})
-  .catch((err) => next(err))
+    .then(
+      (product) => {
+        console.log("Product added", product);
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(product);
+      },
+      (err) => {
+        next(err);
+      }
+    )
+    .catch((err) => next(err));
 });
 // delete a product
-router.delete("/product/:id", function(req, res, next){
-  Product.deleteOne({_id: req.params.id}, function(err, result){
-    if (err){
-      return next(err)
+router.delete("/product/:id", function (req, res, next) {
+  Product.deleteOne({ _id: req.params.id }, function (err, result) {
+    if (err) {
+      return next(err);
     }
     // result
-    res.json(result)
-  })
+    res.json(result);
+  });
 });
 //update a service
-router.put("/product/:id", function(req, res, next){
-  Product.findOneAndUpdate({_id: req.params.id}, 
-    { name: req.body.name, detail: req.body.detail, service: req.body.service}, 
-    function(err, result){
-    if (err) {
-      return next(err)
+router.put("/product/:id", function (req, res, next) {
+  Product.findOneAndUpdate(
+    { _id: req.params.id },
+    { name: req.body.name, detail: req.body.detail, service: req.body.service },
+    function (err, result) {
+      if (err) {
+        return next(err);
+      }
+      // result
+      res.json(result);
     }
-    // result
-    res.json(result)
-  })
+  );
 });
 
 // mahnoor part => packages
@@ -143,8 +159,12 @@ router.post("/package", function (req, res, next) {
 router.put("/package/:id", function (req, res, next) {
   Package.findOneAndUpdate(
     { _id: req.params.id },
-    { name: req.body.name , description:req.body.description,price:req.body.price},
-    
+    {
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+    },
+
     function (error, results) {
       if (error) {
         return next(error);
@@ -167,30 +187,31 @@ router.delete("/package/:id", function (req, res, next) {
 
 // fatima anwar part
 //admin view all chats
-router.get('/chats', function(req, res, next){
-  Chat.find().sort('_id')
-  .populate("cid")
-  .populate("messages.mid")
-  .exec(function(error, results) {
-    if (error) {
+router.get("/chats", function (req, res, next) {
+  Chat.find()
+    .sort("_id")
+    .populate("cid")
+    .populate("messages.mid")
+    .exec(function (error, results) {
+      if (error) {
         return next(error);
-    }
-    // displaying the result
-    res.json(results);
-  })
+      }
+      // displaying the result
+      res.json(results);
+    });
 });
 
 //admin view one chat
-router.get('/chat/:id', function(req, res, next){
+router.get("/chat/:id", function (req, res, next) {
   Chat.findById(req.params.id)
-  .populate("cid")
-  .populate("messages.mid")
-  .then((chat) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json(chat);
-  })
-  .catch((err) => next(err))
+    .populate("cid")
+    .populate("messages.mid")
+    .then((chat) => {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json(chat);
+    })
+    .catch((err) => next(err));
 });
 
 module.exports = router;
